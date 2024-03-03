@@ -1,0 +1,76 @@
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Manage Sites</h3>
+        <!-- Buttons to add manpower, expenses, and tools -->
+        <div class="row">
+            <div class="col s4">
+                <a href="AddManpower/" class="btn waves-effect waves-light">Add Manpower</a>
+            </div>
+            <div class="col s4">
+                <a href="AddExpenses/" class="btn waves-effect waves-light">Add Expenses</a>
+            </div>
+            <div class="col s4">
+                <a href="AddTools/" class="btn waves-effect waves-light">Add Tools</a>
+            </div>
+        </div>
+        <!-- Table to display details for manpower -->
+        <h4>Manpower</h4>
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>Emp ID</th>
+                    <th>Name</th>
+                    <th>Aadhar No</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add rows for manpower details -->
+                <tr>
+                    <td><a href="LabourDetails/">name of</a></td>
+                    <td>Name</td>
+                    <td>Aadhar No</td>
+                    <td>Contact</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Table to display details for expenses -->
+        <h4>Expenses</h4>
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Expense Type</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add rows for expense details -->
+            </tbody>
+        </table>
+        <!-- Table to display details for tools -->
+        <h4>Tools</h4>
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>Tool ID</th>
+                    <th>Tool Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add rows for tool details -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+
+{% endblock %}
+
+

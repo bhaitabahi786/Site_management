@@ -60,7 +60,7 @@ ROOT_URLCONF = 'SiteManage.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'sites', 'templates/sites')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

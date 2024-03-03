@@ -1,0 +1,46 @@
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Add Manpower</h3>
+        <form id="add_manpower_form">
+            <div class="input-field">
+                <input id="site_name" type="text" class="validate">
+                <label for="site_name">Site Name</label>
+            </div>
+            <div class="input-field">
+                <input id="emp_id" type="text" class="validate">
+                <label for="emp_id">Emp ID</label>
+            </div>
+            <div class="input-field">
+                <input id="name" type="text" class="validate">
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="aadhar_no" type="text" class="validate">
+                <label for="aadhar_no">Aadhar No</label>
+            </div>
+            <div class="input-field">
+                <input id="contact" type="text" class="validate">
+                <label for="contact">Contact</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Add Manpower</button>
+            <a href="../" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.getElementById('add_manpower_form').addEventListener('submit', function(event) {
+            // Prevent default form submission
+            event.preventDefault();
+            // Add manpower logic here (e.g., save to database)
+            // Redirect to the manage sites page after adding manpower
+            window.location.href = '../';
+        });
+    </script>
+</body>
+
+{% endblock %}

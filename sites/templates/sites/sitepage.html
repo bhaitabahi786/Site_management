@@ -1,0 +1,44 @@
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Site Manager</h3>
+        <!-- Add Site Button -->
+        <a href="addSites/" class="btn waves-effect waves-light">Add Site</a>
+
+        <!-- Table to display all added sites -->
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Site 1</td>
+                    <td><a href="ManageSites/"> Site 1 </a></td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="#" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Site 2</td>
+                    <td>http://www.site2.com</td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="#" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+                </tr>
+                <!-- Add more rows for additional sites -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+{% endblock %}

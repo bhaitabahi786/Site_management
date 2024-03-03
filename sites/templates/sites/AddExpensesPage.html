@@ -1,0 +1,46 @@
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Add Expenses</h3>
+        <form id="add_expenses_form">
+            <div class="input-field">
+                <input id="site_name" type="text" class="validate">
+                <label for="site_name">Site Name</label>
+            </div>
+            <div class="input-field">
+                <input id="date" type="text" class="datepicker">
+                <label for="date">Date</label>
+            </div>
+            <div class="input-field">
+                <input id="expense_type" type="text" class="validate">
+                <label for="expense_type">Expense Type</label>
+            </div>
+            <div class="input-field">
+                <input id="amount" type="text" class="validate">
+                <label for="amount">Amount</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Add Expenses</button>
+            <a href="../" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.getElementById('add_expenses_form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Add expenses logic here (e.g., save to database)
+            window.location.href = '../';
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems);
+        });
+    </script>
+</body>
+
+{% endblock %}
