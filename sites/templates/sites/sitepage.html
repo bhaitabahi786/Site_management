@@ -35,6 +35,15 @@
                     </td>
                 </tr>
                 <!-- Add more rows for additional sites -->
+                {% for site in sites %}
+                <tr>
+                    <td>{{ site.name }}</td>
+                    <td><a href="{% url 'ManageSites' site.id %}"> {{ site.id }} </a></td>
+                    <td>
+                        <a href="{% url 'delete_site' site.id %}" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
