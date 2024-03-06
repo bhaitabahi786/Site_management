@@ -8,7 +8,7 @@
         <!-- Buttons to add manpower, expenses, and tools -->
         <div class="row">
             <div class="col s4">
-                <a href="AddManpower/" class="btn waves-effect waves-light">Add Manpower</a>
+                <a href="{% url 'AddManpower' siteInfo.id %}" class="btn waves-effect waves-light">Add Manpower</a>
             </div>
             <div class="col s4">
                 <a href="AddExpenses/" class="btn waves-effect waves-light">Add Expenses</a>
@@ -30,12 +30,21 @@
             </thead>
             <tbody>
                 <!-- Add rows for manpower details -->
+                {% for labour in manpowers %}
+                {% if siteInfo == labour.site %}
+                
                 <tr>
-                    <td><a href="LabourDetails/">name of</a></td>
-                    <td>Name</td>
-                    <td>Aadhar No</td>
-                    <td>Contact</td>
+                    <td> {{ labour.id }} </td>
+                    <td> {{ labour.name }} </td>
+                    <td> {{ labour.adhaarno }} </td>
+                    <td> {{ labour.contact }} </td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'delete_Manpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
                 </tr>
+                {% endif %}
+                {% endfor %}
             </tbody>
         </table>
         <!-- Table to display details for expenses -->
