@@ -7,38 +7,42 @@
         <h3>Labour Details</h3>
         <div class="row">
             <div class="col s6">
-                <p><strong>Name:</strong> John Doe</p>
-                <p><strong>Details:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p><strong>Name:</strong> {{ manPK.name }} </p>
+                <p><strong>Details:</strong> {{ manPK.contact }} </p>
             </div>
         </div>
         <h4>Add Day-wise Details</h4>
         <form id="add_labour_details_form">
+            <div class="input-field" >
+                <input id="manID" name="manpower_id" type="text" class="datepicker" value="{{ manPK.id }}">
+                <label for="manID">Date</label>
+            </div>
             <div class="input-field">
-                <input id="date" type="text" class="datepicker">
+                <input id="date" name="date" type="text" class="datepicker">
                 <label for="date">Date</label>
             </div>
             <div class="input-field">
-                <select id="present_or_absent">
+                <select id="present_or_absent" name="present_or_absent">
                     <option value="" disabled selected>Choose an option</option>
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
                 </select>
-                <label>Present or Absent</label>
+                <label for="present_or_absent">Present or Absent</label>
             </div>
             <div class="input-field">
-                <input id="overtime" type="text" class="validate">
+                <input id="overtime" name="overtime" type="text" class="validate">
                 <label for="overtime">Overtime (hrs)</label>
             </div>
             <div class="input-field">
-                <input id="amount_taken" type="text" class="validate">
+                <input id="amount_taken" name="amount_taken" type="text" class="validate">
                 <label for="amount_taken">Amount Taken</label>
             </div>
             <div class="input-field">
-                <input id="per_day_wages" type="text" class="validate">
+                <input id="per_day_wages" name="per_day_wages" type="text" class="validate">
                 <label for="per_day_wages">Per Day Wages</label>
             </div>
             <button class="btn waves-effect waves-light" type="submit">Add Details</button>
-            <a href="../" class="btn waves-effect waves-light">Go Back</a>
+            <a href=" " class="btn waves-effect waves-light">Go Back</a>
         </form>
         <h4>Day-wise Details</h4>
         <table class="highlight">
@@ -67,45 +71,7 @@
     </div>
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.datepicker');
-            var instances = M.Datepicker.init(elems);
-            var select_elems = document.querySelectorAll('select');
-            var select_instances = M.FormSelect.init(select_elems);
-
-            var totalAmount = 0;
-
-            document.getElementById('add_labour_details_form').addEventListener('submit', function(event) {
-                event.preventDefault();
-                // Add day-wise details logic here (e.g., save to database)
-                // Assuming you have the values in variables
-                var date = document.getElementById('date').value;
-                var presentOrAbsent = document.getElementById('present_or_absent').value;
-                var overtime = document.getElementById('overtime').value;
-                var amountTaken = document.getElementById('amount_taken').value;
-                var perDayWages = document.getElementById('per_day_wages').value;
-
-                // Calculate total amount
-                totalAmount += parseFloat(amountTaken);
-
-                // Update total amount in the table
-                document.getElementById('total_amount').textContent = totalAmount.toFixed(2);
-
-                // Add a row to the table
-                var tbody = document.querySelector('tbody');
-                var row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${date}</td>
-                    <td>${presentOrAbsent}</td>
-                    <td>${overtime}</td>
-                    <td>${amountTaken}</td>
-                    <td>${perDayWages}</td>
-                    <td><a href="#" class="btn-small waves-effect waves-light">Edit</a> <a href="#" class="btn-small waves-effect waves-light">Delete</a></td>
-                `;
-            });
-        });
-    </script>
+    
 </body>
 
 {% endblock %}

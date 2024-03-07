@@ -33,7 +33,7 @@ class Tool(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     quantity = models.IntegerField()
-
+    amount = models.DecimalField(max_digits=100, decimal_places=2)
 
 
 

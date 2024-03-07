@@ -5,36 +5,32 @@
 <body>
     <div class="container">
         <h3>Add Tools</h3>
-        <form id="add_tools_form">
+        <form method="post">
+            {% csrf_token %}
             <div class="input-field">
-                <input id="site_name" type="text" class="validate">
+                <input id="site_name" name="site_name" type="text" class="validate" value="{{ siteInfo.name }}" >
                 <label for="site_name">Site Name</label>
             </div>
+            
             <div class="input-field">
-                <input id="tool_id" type="text" class="validate">
-                <label for="tool_id">Tool ID</label>
-            </div>
-            <div class="input-field">
-                <input id="tool_name" type="text" class="validate">
+                <input id="tool_name" name="tool_name" type="text" class="validate">
                 <label for="tool_name">Tool Name</label>
             </div>
             <div class="input-field">
-                <input id="quantity" type="text" class="validate">
+                <input id="quantity" name="quantity" type="text" class="validate">
                 <label for="quantity">Quantity</label>
             </div>
+            <div class="input-field">
+                <input id="amount" name="amount" type="text" class="validate">
+                <label for="amount">Amount</label>
+            </div>
             <button class="btn waves-effect waves-light" type="submit">Add Tools</button>
-            <a href="../" class="btn waves-effect waves-light">Cancel</a>
+            <a href="{% url 'ManageSites' siteInfo.id %}" class="btn waves-effect waves-light">Cancel</a>
         </form>
     </div>
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.getElementById('add_tools_form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            // Add tools logic here (e.g., save to database)
-            window.location.href = '../';
-        });
-    </script>
+    
 </body>
 
 {% endblock %}

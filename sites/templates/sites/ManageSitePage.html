@@ -11,10 +11,10 @@
                 <a href="{% url 'AddManpower' siteInfo.id %}" class="btn waves-effect waves-light">Add Manpower</a>
             </div>
             <div class="col s4">
-                <a href="AddExpenses/" class="btn waves-effect waves-light">Add Expenses</a>
+                <a href="{% url 'AddExpenses' siteInfo.id %}" class="btn waves-effect waves-light">Add Expenses</a>
             </div>
             <div class="col s4">
-                <a href="AddTools/" class="btn waves-effect waves-light">Add Tools</a>
+                <a href="{% url 'AddTools' siteInfo.id %}" class="btn waves-effect waves-light">Add Tools</a>
             </div>
         </div>
         <!-- Table to display details for manpower -->
@@ -26,6 +26,7 @@
                     <th>Name</th>
                     <th>Aadhar No</th>
                     <th>Contact</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,12 +36,12 @@
                 
                 <tr>
                     <td> {{ labour.id }} </td>
-                    <td> {{ labour.name }} </td>
+                    <td> <a href="{% url 'LabourDetails' labour.id %}" > {{ labour.name }} </a></td>
                     <td> {{ labour.adhaarno }} </td>
                     <td> {{ labour.contact }} </td>
                     <td>
                         <a href="#" class="btn-small waves-effect waves-light">Edit</a>
-                        <a href="{% url 'delete_Manpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
+                        <a href="{% url 'delete_dataManage' 'manpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
                 </tr>
                 {% endif %}
@@ -55,10 +56,24 @@
                     <th>Date</th>
                     <th>Expense Type</th>
                     <th>Amount</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Add rows for expense details -->
+                {% for exp in expenses %}
+                {% if siteInfo == exp.site %}
+                <tr>
+                    <td> {{ exp.date }} </td>
+                    <td> {{ exp.description }} </td>
+                    <td> {{ exp.amount }} </td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'delete_dataManage' 'expense' exp.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
             </tbody>
         </table>
         <!-- Table to display details for tools -->
@@ -66,13 +81,28 @@
         <table class="highlight">
             <thead>
                 <tr>
-                    <th>Tool ID</th>
+                    
                     <th>Tool Name</th>
                     <th>Quantity</th>
+                    <th>Tool Amount</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Add rows for tool details -->
+                {% for tool in Tools %}
+                {% if siteInfo == tool.site %}
+                <tr>
+                    <td> {{ tool.name }} </td>
+                    <td> {{ tool.quantity }} </td>
+                    <td> {{ tool.amount }} </td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'delete_dataManage' 'tool' tool.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
             </tbody>
         </table>
     </div>
