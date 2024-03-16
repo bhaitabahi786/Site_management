@@ -13,9 +13,10 @@ class Manpower(models.Model):
     contact = models.CharField(max_length=20)
 
 class Attendance(models.Model):
+    MAN_CHOICES = [("Present", "Present"), ("Absent", "Absent")]
     manpower = models.ForeignKey(Manpower, on_delete=models.CASCADE)
     date = models.DateField()
-    present_or_absent = models.TextChoices("PA","Present Absent")
+    present_or_absent = models.CharField(max_length=10, choices=MAN_CHOICES)
     overtime = models.DecimalField(max_digits=20, decimal_places=2)
     amount_taken = models.DecimalField(max_digits=100, decimal_places=2)
     per_day_wages = models.DecimalField(max_digits=100, decimal_places=2)

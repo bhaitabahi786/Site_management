@@ -89,7 +89,9 @@ def LabourDetails(request,labour_id):
 
     if request.method == 'POST':
         manpower_id = request.POST.get('manpower_id')
-        date = request.POST.get('date')
+        date_str = request.POST.get('date')
+        # Convert the date to YYYY-MM-DD format
+        date = datetime.strptime(date_str, '%b %d, %Y').strftime('%Y-%m-%d')
         present_or_absent = request.POST.get('present_or_absent')
         overtime = request.POST.get('overtime')
         amount_taken = request.POST.get('amount_taken')
@@ -112,9 +114,11 @@ def LabourDetails(request,labour_id):
         )
         attendance.save()
 
-        redirect('LabourDetails',labour_id =labour_id)
+        return redirect('LabourDetails',labour_id =labour_id)
 
-    return render(request,'sites/LabourDetails.html',{'manPK':manPK})
+    manAttendances = Attendance.objects.filter(manpower=manPK)
+
+    return render(request,'sites/LabourDetails.html',{'manPK':manPK,'manAttendances':manAttendances})
 
 def delete_site(request, site_id):
     site = get_object_or_404(Site, pk=site_id)

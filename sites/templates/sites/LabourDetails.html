@@ -12,10 +12,11 @@
             </div>
         </div>
         <h4>Add Day-wise Details</h4>
-        <form id="add_labour_details_form">
+        <form method="post">
+            {% csrf_token %}
             <div class="input-field" >
-                <input id="manID" name="manpower_id" type="text" class="datepicker" value="{{ manPK.id }}">
-                <label for="manID">Date</label>
+                <input id="manID" name="manpower_id" type="text" class="validate" value="{{ manPK.id }}">
+                <label for="manID">man ID</label>
             </div>
             <div class="input-field">
                 <input id="date" name="date" type="text" class="datepicker">
@@ -30,15 +31,15 @@
                 <label for="present_or_absent">Present or Absent</label>
             </div>
             <div class="input-field">
-                <input id="overtime" name="overtime" type="text" class="validate">
+                <input id="overtime" name="overtime" type="text" value="0" class="validate">
                 <label for="overtime">Overtime (hrs)</label>
             </div>
             <div class="input-field">
-                <input id="amount_taken" name="amount_taken" type="text" class="validate">
+                <input id="amount_taken" name="amount_taken" type="text" value="0" class="validate">
                 <label for="amount_taken">Amount Taken</label>
             </div>
             <div class="input-field">
-                <input id="per_day_wages" name="per_day_wages" type="text" class="validate">
+                <input id="per_day_wages" name="per_day_wages" type="text" value="0" class="validate">
                 <label for="per_day_wages">Per Day Wages</label>
             </div>
             <button class="btn waves-effect waves-light" type="submit">Add Details</button>
@@ -58,6 +59,20 @@
             </thead>
             <tbody>
                 <!-- Add rows for day-wise details -->
+                {% for manAttendance in manAttendances %}
+                <tr>
+                    <td> {{ manAttendance.date }} </td>
+                    <td> {{ manAttendance.present_or_absent }} </td>
+                    <td> {{ manAttendance.overtime }} </td>
+                    <td> {{ manAttendance.amount_taken }} </td>
+                    <td> {{ manAttendance.per_day_wages }} </td>
+                    <td>
+                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="#" class="btn-small waves-effect waves-light">Delete</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
@@ -71,7 +86,19 @@
     </div>
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems);
+            
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+    </script>
 </body>
 
 {% endblock %}
