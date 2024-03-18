@@ -14,7 +14,7 @@
         <h4>Add Day-wise Details</h4>
         <form method="post">
             {% csrf_token %}
-            <div class="input-field" >
+            <div class="input-field" hidden>
                 <input id="manID" name="manpower_id" type="text" class="validate" value="{{ manPK.id }}">
                 <label for="manID">man ID</label>
             </div>
@@ -43,7 +43,7 @@
                 <label for="per_day_wages">Per Day Wages</label>
             </div>
             <button class="btn waves-effect waves-light" type="submit">Add Details</button>
-            <a href=" " class="btn waves-effect waves-light">Go Back</a>
+            <a href="{% url 'ManageSites' siteInfo.id %} " class="btn waves-effect waves-light">Go Back</a>
         </form>
         <h4>Day-wise Details</h4>
         <table class="highlight">
@@ -54,6 +54,7 @@
                     <th>Overtime (hrs)</th>
                     <th>Amount Taken</th>
                     <th>Per Day Wages</th>
+                    <th>Balance Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -62,13 +63,15 @@
                 {% for manAttendance in manAttendances %}
                 <tr>
                     <td> {{ manAttendance.date }} </td>
-                    <td> {{ manAttendance.present_or_absent }} </td>
-                    <td> {{ manAttendance.overtime }} </td>
-                    <td> {{ manAttendance.amount_taken }} </td>
-                    <td> {{ manAttendance.per_day_wages }} </td>
+                    <td class="present_or_absent"> {{ manAttendance.get_present_or_absent_display }} </td>
+                    <td class="overtime">{{ manAttendance.overtime }}</td>
+                    <td class="amount-taken">{{ manAttendance.amount_taken }}</td>
+                    <td class="per-day-wages">{{ manAttendance.per_day_wages }}</td>
+                    <td class="total-amount"></td>
                     <td>
                         <a href="#" class="btn-small waves-effect waves-light">Edit</a>
-                        <a href="#" class="btn-small waves-effect waves-light">Delete</a>
+                        <a href="{% url 'delete_ManData' siteInfo.id manPK.id manAttendance.id %}"
+                            class="btn-small waves-effect waves-light">Delete</a>
                     </td>
 
                 </tr>
@@ -76,7 +79,10 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3"></td>
+                    
+                    <td><strong>Present:</strong></td>
+                    <td id="present"></td>
+                    <td colspan="2"></td>
                     <td><strong>Total Amount:</strong></td>
                     <td id="total_amount"></td>
                     <td></td>
@@ -87,21 +93,59 @@
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.datepicker');
             var instances = M.Datepicker.init(elems);
-            
+
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(elems);
         });
     </script>
+    <script>
+        // Function to calculate total amount for each row
+        function calculateTotalAmount() {
+            var rows = document.querySelectorAll("tbody tr");
+            var totalAmount = 0;
+
+            rows.forEach(function (row) {
+                var amountTaken = parseFloat(row.querySelector(".amount-taken").textContent);
+                var perDayWages = parseFloat(row.querySelector(".per-day-wages").textContent);
+                var totalRowAmount = perDayWages - amountTaken;
+                totalAmount += totalRowAmount;
+                row.querySelector(".total-amount").textContent = totalRowAmount.toFixed(2);
+            });
+            document.getElementById("total_amount").textContent = totalAmount.toFixed(2);
+        }
+
+        function calculatePresent(){
+            var rows = document.querySelectorAll("tbody tr");
+            var present = 0;
+
+            rows.forEach(function (row) {
+                var presentOrAbsent = row.querySelector(".present_or_absent").innerText;
+                if(presentOrAbsent.trim() == "Present"){
+                    present += 1;
+                }
+                
+            });
+            document.getElementById("present").textContent = present;
+            
+        }
+
+        // Call the calculateTotalAmount function when the page loads
+        document.addEventListener('DOMContentLoaded', calculateTotalAmount);
+        document.addEventListener('DOMContentLoaded', calculatePresent);
+
+        // Call the calculateTotalAmount function whenever the form is submitted
+        var form = document.querySelector("form");
+        form.addEventListener("submit", calculateTotalAmount);
+        form.addEventListener("submit", calculatePresent);
+
+    </script>
 </body>
 
 {% endblock %}
-
-
-

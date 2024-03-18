@@ -36,7 +36,7 @@
                 
                 <tr>
                     <td> {{ labour.id }} </td>
-                    <td> <a href="{% url 'LabourDetails' labour.id %}" > {{ labour.name }} </a></td>
+                    <td> <a href="{% url 'LabourDetails' siteInfo.id labour.id %}" > {{ labour.name }} </a></td>
                     <td> {{ labour.adhaarno }} </td>
                     <td> {{ labour.contact }} </td>
                     <td>
@@ -97,7 +97,7 @@
                     <td> {{ tool.quantity }} </td>
                     <td> {{ tool.amount }} </td>
                     <td>
-                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'EditTools' tool.id siteInfo.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_dataManage' 'tool' tool.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
                 </tr>

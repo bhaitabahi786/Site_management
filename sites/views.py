@@ -22,6 +22,24 @@ def addSites(request):
 
     return render(request,'sites/AddSitePage.html')
 
+def editSites(request, site_id):
+    site = get_object_or_404(Site, pk=site_id)
+
+    if request.method == 'POST':
+        site_name = request.POST.get('site_name')
+        site_address = request.POST.get('site_address')
+        quotation_amount = request.POST.get('quotation_amount')
+
+        # Update the existing Site object
+        site.name = site_name
+        site.address = site_address
+        site.quotation_amount = quotation_amount
+        site.save()
+
+        return redirect('sites')
+
+    return render(request, 'sites/AddSitePage.html', {'site': site})
+
 def ManageSites(request,site_id):
     siteInfo = get_object_or_404(Site, pk=site_id)
 
@@ -47,6 +65,29 @@ def AddManpower(request,site_id):
 
     return render(request,'sites/AddManpowerPage.html',{'siteInfo':siteInfo})
 
+def EditManpower(request, site_id, manpower_id):
+    siteInfo = get_object_or_404(Site, pk=site_id)
+    manpower = get_object_or_404(Manpower, pk=manpower_id)
+
+    if request.method == 'POST':
+        site_name = request.POST.get('site_name')
+        site_name2 = Site.objects.get(name=site_name)
+        emp_name = request.POST.get('emp_name')
+        aadhar_no = request.POST.get('aadhar_no')
+        contact = request.POST.get('contact')
+
+        # Update the existing Manpower object
+        manpower.site = site_name2
+        manpower.name = emp_name
+        manpower.adhaarno = aadhar_no
+        manpower.contact = contact
+        manpower.save()
+
+        return redirect('ManageSites', site_id=site_id)
+
+    return render(request, 'sites/AddManpowerPage.html', {'siteInfo': siteInfo, 'manpower': manpower})
+
+
 def AddExpenses(request,site_id):
     
     siteInfo = get_object_or_404(Site, pk=site_id)
@@ -66,6 +107,30 @@ def AddExpenses(request,site_id):
 
     return render(request,'sites/AddExpensesPage.html',{'siteInfo':siteInfo})
 
+def EditExpenses(request, site_id, expense_id):
+    siteInfo = get_object_or_404(Site, pk=site_id)
+    expense = get_object_or_404(Expense, pk=expense_id)
+
+    if request.method == 'POST':
+        site_name = request.POST.get('site_name')
+        site_name2 = Site.objects.get(name=site_name)
+        date_str = request.POST.get('date')
+        # Convert the date to YYYY-MM-DD format
+        date = datetime.strptime(date_str, '%b %d, %Y').strftime('%Y-%m-%d')
+        expense_type = request.POST.get('expense_type')
+        amount = request.POST.get('amount')
+
+        # Update the existing Expense object
+        expense.site = site_name2
+        expense.date = date
+        expense.description = expense_type
+        expense.amount = amount
+        expense.save()
+
+        return redirect('ManageSites', site_id=site_id)
+
+    return render(request, 'sites/AddExpensesPage.html', {'siteInfo': siteInfo, 'expense': expense})
+
 def AddTools(request,site_id):
 
     siteInfo = get_object_or_404(Site, pk=site_id)
@@ -83,8 +148,31 @@ def AddTools(request,site_id):
 
     return render(request,'sites/AddToolsPage.html',{'siteInfo':siteInfo})
 
-def LabourDetails(request,labour_id):
+def EditTools(request, site_id, tool_id):
+    siteInfo = get_object_or_404(Site, pk=site_id)
+    tool = get_object_or_404(Tool, pk=tool_id)
+
+    if request.method == 'POST':
+        site_name = request.POST.get('site_name')
+        site_name2 = Site.objects.get(name=site_name)
+        tool_name = request.POST.get('tool_name')
+        quantity = request.POST.get('quantity')
+        amount = request.POST.get('amount')
+
+        # Update the existing Tool object
+        tool.site = site_name2
+        tool.name = tool_name
+        tool.quantity = quantity
+        tool.amount = amount
+        tool.save()
+
+        return redirect('ManageSites', site_id=site_id)
+
+    return render(request, 'sites/EditPages/EditToolsPage.html', {'siteInfo': siteInfo, 'tool': tool})
+
+def LabourDetails(request,site_id,labour_id):
     
+    siteInfo = get_object_or_404(Site, pk=site_id)
     manPK = get_object_or_404(Manpower, pk=labour_id)
 
     if request.method == 'POST':
@@ -114,11 +202,13 @@ def LabourDetails(request,labour_id):
         )
         attendance.save()
 
-        return redirect('LabourDetails',labour_id =labour_id)
+        return redirect('LabourDetails',site_id=site_id,labour_id =labour_id)
 
     manAttendances = Attendance.objects.filter(manpower=manPK)
 
-    return render(request,'sites/LabourDetails.html',{'manPK':manPK,'manAttendances':manAttendances})
+    return render(request,'sites/LabourDetails.html',{'manPK':manPK,'manAttendances':manAttendances,'siteInfo':siteInfo})
+
+
 
 def delete_site(request, site_id):
     site = get_object_or_404(Site, pk=site_id)
@@ -137,6 +227,9 @@ def delete_dataManage(request,delete_type, man_id, site_id):
     data.delete()
     return redirect('ManageSites',site_id=site_id)
 
+def delete_ManData(request,labour_id,record_id,site_id):
 
+    data = get_object_or_404(Attendance, pk=record_id)
+    data.delete()
 
-
+    return redirect('LabourDetails', site_id=site_id,labour_id =labour_id)

@@ -1,0 +1,39 @@
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Add Tools</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-field">
+                <input id="site_name" name="site_name" type="text" class="validate" value="{{ siteInfo.name }}" >
+                <label for="site_name">Site Name</label>
+            </div>
+            
+            <div class="input-field">
+                <input id="tool_name" name="tool_name" type="text" class="validate" value="{{ tool.name }}" >
+                <label for="tool_name">Tool Name</label>
+            </div>
+            <div class="input-field">
+                <input id="quantity" name="quantity" type="text" class="validate" value="{{ tool.quantity }}" >
+                <label for="quantity">Quantity</label>
+            </div>
+            <div class="input-field">
+                <input id="amount" name="amount" type="text" class="validate" value="{{ tool.amount }}" >
+                <label for="amount">Amount</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Update Tools</button>
+            <a href="{% url 'ManageSites' siteInfo.id %}" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+</body>
+
+{% endblock %}
+
+
+
