@@ -1,0 +1,68 @@
+
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Labour Details</h3>
+        <div class="row">
+            <div class="col s6">
+                <p><strong>Name:</strong> {{ manPK.name }} </p>
+                <p><strong>Details:</strong> {{ manPK.contact }} </p>
+            </div>
+        </div>
+        <h4>Add Day-wise Details</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-field" hidden>
+                <input id="manID" name="manpower_id" type="text" class="validate" value="{{ manPK.id }}">
+                <label for="manID">man ID</label>
+            </div>
+            <div class="input-field">
+                <input id="date" name="date" type="text" class="datepicker" value="{{ attendRecord.date }}" >
+                <label for="date">Date</label>
+            </div>
+            <div class="input-field">
+                <select id="present_or_absent" name="present_or_absent" value="{{ attendRecord.get_present_or_absent_display }}" >
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                </select>
+                <label for="present_or_absent">Present or Absent</label>
+            </div>
+            <div class="input-field">
+                <input id="overtime" name="overtime" type="text" class="validate" value="{{ attendRecord.overtime }}" >
+                <label for="overtime">Overtime (hrs)</label>
+            </div>
+            <div class="input-field">
+                <input id="amount_taken" name="amount_taken" type="text" class="validate" value="{{ attendRecord.amount_taken }}" >
+                <label for="amount_taken">Amount Taken</label>
+            </div>
+            <div class="input-field">
+                <input id="per_day_wages" name="per_day_wages" type="text" class="validate" value="{{ attendRecord.per_day_wages }}" >
+                <label for="per_day_wages">Per Day Wages</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Update Details</button>
+            <a href="{% url 'ManageSites' siteInfo.id %} " class="btn waves-effect waves-light">Go Back</a>
+        </form>
+        
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems);
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+    </script>
+   
+</body>
+
+{% endblock %}
+

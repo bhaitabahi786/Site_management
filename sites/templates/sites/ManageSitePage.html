@@ -40,7 +40,7 @@
                     <td> {{ labour.adhaarno }} </td>
                     <td> {{ labour.contact }} </td>
                     <td>
-                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'EditManpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_dataManage' 'manpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
                 </tr>
@@ -68,7 +68,7 @@
                     <td> {{ exp.description }} </td>
                     <td> {{ exp.amount }} </td>
                     <td>
-                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'EditExpenses' exp.id siteInfo.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_dataManage' 'expense' exp.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
                 </tr>

@@ -1,0 +1,36 @@
+
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    
+    <div class="container">
+        <h3>Add Site</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-field">
+                <input id="site_name" name="site_name" type="text" class="validate" value="{{ site.name }}" >
+                <label for="site_name">Name of Site</label>
+            </div>
+            <div class="input-field">
+                <input id="site_address" name="site_address" type="text" class="validate" value="{{ site.address }}" >
+                <label for="site_address">Address</label>
+            </div>
+            <div class="input-field">
+                <input id="quotation_amount" name="quotation_amount" type="number" class="validate" value="{{ site.quotation_amount }}" >
+                <label for="quotation_amount">Quotation Amount</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Edit Site</button>
+            <a href="{% url 'sites' %}" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+</body>
+{% endblock %}
+
+
+

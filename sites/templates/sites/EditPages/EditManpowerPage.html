@@ -1,0 +1,38 @@
+
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Add Manpower</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-field">
+                <input id="site_name" name="site_name" type="text" class="validate" value="{{ siteInfo.name }}" >
+                <label for="site_name">Site Name</label>
+            </div>
+
+            <div class="input-field">
+                <input id="name" name="emp_name" type="text" class="validate" value="{{ manpower.name }}" >
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="aadhar_no" name="aadhar_no" type="text" class="validate" value="{{ manpower.adhaarno }}" >
+                <label for="aadhar_no">Aadhar No</label>
+            </div>
+            <div class="input-field">
+                <input id="contact" name="contact" type="text" class="validate" value="{{ manpower.contact }}" >
+                <label for="contact">Contact</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Edit Manpower</button>
+            <a href="{% url 'ManageSites' siteInfo.id %}" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+
+{% endblock %}
+

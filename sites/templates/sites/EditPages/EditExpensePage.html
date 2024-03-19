@@ -1,0 +1,44 @@
+
+{% extends 'Navbar.html' %}
+
+{% block content %}
+
+<body>
+    <div class="container">
+        <h3>Add Expenses</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-field">
+                <input id="site_name" name="site_name" type="text" class="validate" value="{{ siteInfo.name }}" >
+                <label for="site_name">Site Name</label>
+            </div>
+            <div class="input-field">
+                <input id="date" name="date" type="text" class="datepicker" value="{{ expense.date }}" >
+                <label for="date">Date</label>
+            </div>
+            <div class="input-field">
+                <input id="expense_type" name="expense_type" type="text" class="validate" value="{{ expense.description }}" >
+                <label for="expense_type">Expense Type</label>
+            </div>
+            <div class="input-field">
+                <input id="amount" name="amount" type="text" class="validate" value="{{ expense.amount }}" >
+                <label for="amount">Amount</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Edit Expenses</button>
+            <a href="{% url 'ManageSites' siteInfo.id %}" class="btn waves-effect waves-light">Cancel</a>
+        </form>
+    </div>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems);
+            
+        });
+    </script>
+</body>
+
+{% endblock %}
+

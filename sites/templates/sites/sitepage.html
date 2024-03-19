@@ -27,7 +27,7 @@
                     <td> {{ site.address }} </td>
                     <td> {{ site.quotation_amount }} </td>
                     <td>
-                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'editSites' site.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_site' site.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
                 </tr>

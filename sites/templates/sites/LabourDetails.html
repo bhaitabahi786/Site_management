@@ -69,7 +69,7 @@
                     <td class="per-day-wages">{{ manAttendance.per_day_wages }}</td>
                     <td class="total-amount"></td>
                     <td>
-                        <a href="#" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'EditLabourDetails' siteInfo.id manPK.id manAttendance.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_ManData' siteInfo.id manPK.id manAttendance.id %}"
                             class="btn-small waves-effect waves-light">Delete</a>
                     </td>
