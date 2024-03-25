@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import *
 from datetime import datetime
+from django.db.models import F, Sum
 # Create your views here.
 
 from django.http import HttpResponse
@@ -28,8 +29,21 @@ def ManageSites(request,site_id):
     manpowers = Manpower.objects.all()
     expenses = Expense.objects.all()
     Tools = Tool.objects.all()
+    records = Attendance.objects.all()
+ 
+    total_wages_per_worker = total_amount_per_laborer.objects.all()
 
-    return render(request,'sites/ManageSitePage.html',{'siteInfo':siteInfo,'manpowers':manpowers,'expenses':expenses,'Tools':Tools})
+    context = {
+        'siteInfo': siteInfo,
+        'manpowers': manpowers,
+        'expenses': expenses,
+        'Tools': Tools,
+        'records': records,
+        'total_wages_per_worker': total_wages_per_worker,
+    }
+
+    return render(request,'sites/ManageSitePage.html',context)
+
 
 def AddManpower(request,site_id):
     siteInfo = get_object_or_404(Site, pk=site_id)
@@ -104,9 +118,12 @@ def LabourDetails(request,site_id,labour_id):
             # Handle the case where the manpower_id is invalid
             return HttpResponse('Invalid manpower ID')
 
+        siteID = Site.objects.get(pk=site_id)
+
         # Create an instance of the Attendance model
         attendance = Attendance(
             manpower=manpower,
+            site=siteID,
             date=date,
             present_or_absent=present_or_absent,
             overtime=overtime,
@@ -115,11 +132,32 @@ def LabourDetails(request,site_id,labour_id):
         )
         attendance.save()
 
+        # Calculate the total wages for the worker
+        manAttendances = Attendance.objects.filter(manpower=manPK)
+        total_wages = manAttendances.aggregate(total_amount=Sum('total_wages'))['total_amount'] or 0
+
+        # Update the total_amount_per_laborer model
+        totalAmountLabour = total_amount_per_laborer.objects.filter(Manpower=labour_id)
+
+        if totalAmountLabour.exists():
+            totalAmountLabour.update(total_amount=total_wages)
+        else:
+            # Create a new TotalAmountPerLaborer object with the calculated total
+            TotalAmountPerLaborer = total_amount_per_laborer(
+                Manpower=manpower, 
+                total_amount=total_wages,
+            )
+            TotalAmountPerLaborer.save()
+
         return redirect('LabourDetails',site_id=site_id,labour_id =labour_id)
 
     manAttendances = Attendance.objects.filter(manpower=manPK)
+    totalAmountPer = total_amount_per_laborer.objects.filter(Manpower=manPK)
 
-    return render(request,'sites/LabourDetails.html',{'manPK':manPK,'manAttendances':manAttendances,'siteInfo':siteInfo})
+    return render(request,'sites/LabourDetails.html',{'manPK':manPK,
+    'totalAmountPer':totalAmountPer,
+    'manAttendances':manAttendances,
+    'siteInfo':siteInfo})
 
 # Edit Functions for the respective models.
 
@@ -241,9 +279,31 @@ def EditLabourDetails(request,site_id,labour_id,record_id):
         attendRecord.per_day_wages=per_day_wages
         attendRecord.save()
 
+        # Calculate the total wages for the worker
+        manAttendances = Attendance.objects.filter(manpower=manPK)
+        total_wages = manAttendances.aggregate(total_amount=Sum('total_wages'))['total_amount'] or 0
+
+        # Update the total_amount_per_laborer model
+        totalAmountLabour = total_amount_per_laborer.objects.filter(Manpower=labour_id)
+
+        if totalAmountLabour.exists():
+            totalAmountLabour.update(total_amount=total_wages)
+        else:
+            # Create a new TotalAmountPerLaborer object with the calculated total
+            TotalAmountPerLaborer = total_amount_per_laborer(
+                Manpower=manpower, 
+                total_amount=total_wages,
+            )
+            TotalAmountPerLaborer.save()
+
         return redirect('LabourDetails',site_id=site_id,labour_id =labour_id)
 
-    return render(request,'sites/EditPages/EditLabourDetails.html',{'manPK':manPK,'attendRecord':attendRecord,'siteInfo':siteInfo})
+    totalAmountPer = total_amount_per_laborer.objects.filter(Manpower=manPK)
+
+    return render(request,'sites/EditPages/EditLabourDetails.html',{'manPK':manPK,
+    'totalAmountPer':totalAmountPer,
+    'attendRecord':attendRecord,
+    'siteInfo':siteInfo})
 
 
 # Delete Functions for the respective models.
@@ -269,6 +329,21 @@ def delete_ManData(request,labour_id,record_id,site_id):
 
     data = get_object_or_404(Attendance, pk=record_id)
     data.delete()
+
+    # Calculate the total wages for the worker
+    manAttendances = Attendance.objects.filter(manpower=labour_id)
+    total_wages = manAttendances.aggregate(total_amount=Sum('total_wages'))['total_amount'] or 0
+    # Update the total_amount_per_laborer model
+    totalAmountLabour = total_amount_per_laborer.objects.filter(Manpower=labour_id)
+    if totalAmountLabour.exists():
+        totalAmountLabour.update(total_amount=total_wages)
+    else:
+        # Create a new TotalAmountPerLaborer object with the calculated total
+        TotalAmountPerLaborer = total_amount_per_laborer(
+            Manpower=manpower, 
+            total_amount=total_wages,
+        )
+        TotalAmountPerLaborer.save()
 
     return redirect('LabourDetails', site_id=site_id,labour_id =labour_id)
 

@@ -69,7 +69,8 @@
                     <td class="per-day-wages">{{ manAttendance.per_day_wages }}</td>
                     <td class="total-amount"></td>
                     <td>
-                        <a href="{% url 'EditLabourDetails' siteInfo.id manPK.id manAttendance.id %}" class="btn-small waves-effect waves-light">Edit</a>
+                        <a href="{% url 'EditLabourDetails' siteInfo.id manPK.id manAttendance.id %}"
+                            class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_ManData' siteInfo.id manPK.id manAttendance.id %}"
                             class="btn-small waves-effect waves-light">Delete</a>
                     </td>
@@ -79,13 +80,19 @@
             </tbody>
             <tfoot>
                 <tr>
-                    
+
                     <td><strong>Present:</strong></td>
                     <td id="present"></td>
                     <td colspan="2"></td>
                     <td><strong>Total Amount:</strong></td>
                     <td id="total_amount"></td>
-                    <td></td>
+                    
+                    <td>
+                        
+                            {{ totalAmountPer.0.total_amount}}
+                     
+                    </td>
+                    
                 </tr>
             </tfoot>
         </table>
@@ -105,35 +112,39 @@
             var instances = M.FormSelect.init(elems);
         });
     </script>
+
     <script>
+
         // Function to calculate total amount for each row
         function calculateTotalAmount() {
             var rows = document.querySelectorAll("tbody tr");
-            var totalAmount = 0;
+            var totalAmountPerLaborer = 0;
 
             rows.forEach(function (row) {
                 var amountTaken = parseFloat(row.querySelector(".amount-taken").textContent);
                 var perDayWages = parseFloat(row.querySelector(".per-day-wages").textContent);
                 var totalRowAmount = perDayWages - amountTaken;
-                totalAmount += totalRowAmount;
+                totalAmountPerLaborer += totalRowAmount;
                 row.querySelector(".total-amount").textContent = totalRowAmount.toFixed(2);
             });
-            document.getElementById("total_amount").textContent = totalAmount.toFixed(2);
+            document.getElementById("total_amount").textContent = totalAmountPerLaborer.toFixed(2);
+
+            // sessionStorage.setItem('totalAmountPerLaborer', JSON.stringify(totalAmountPerLaborer));
         }
 
-        function calculatePresent(){
+        function calculatePresent() {
             var rows = document.querySelectorAll("tbody tr");
             var present = 0;
 
             rows.forEach(function (row) {
                 var presentOrAbsent = row.querySelector(".present_or_absent").innerText;
-                if(presentOrAbsent.trim() == "Present"){
+                if (presentOrAbsent.trim() == "Present") {
                     present += 1;
                 }
-                
+
             });
             document.getElementById("present").textContent = present;
-            
+
         }
 
         // Call the calculateTotalAmount function when the page loads
@@ -149,3 +160,4 @@
 </body>
 
 {% endblock %}
+

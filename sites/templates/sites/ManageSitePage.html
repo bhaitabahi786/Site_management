@@ -19,6 +19,7 @@
         </div>
         <!-- Table to display details for manpower -->
         <h4>Manpower</h4>
+        
         <table class="highlight">
             <thead>
                 <tr>
@@ -26,6 +27,7 @@
                     <th>Name</th>
                     <th>Aadhar No</th>
                     <th>Contact</th>
+                    <th>Total Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -39,6 +41,11 @@
                     <td> <a href="{% url 'LabourDetails' siteInfo.id labour.id %}" > {{ labour.name }} </a></td>
                     <td> {{ labour.adhaarno }} </td>
                     <td> {{ labour.contact }} </td>
+                    {% for ll in total_wages_per_worker %}
+                    {% if ll.Manpower.id == labour.id %}
+                    <td> {{ ll.total_amount }} </td>
+                    {% endif %}
+                    {% endfor %}
                     <td>
                         <a href="{% url 'EditManpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_dataManage' 'manpower' labour.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>

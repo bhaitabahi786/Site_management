@@ -24,6 +24,7 @@ urlpatterns = [
     path('ManageSites/EditTools/<int:tool_id>/<int:site_id>', views.EditTools, name='EditTools'),
     path('ManageSites/EditManpower/<int:manpower_id>/<int:site_id>', views.EditManpower, name='EditManpower'),
     path('ManageSites/<int:site_id>/EditLabourDetails/<int:labour_id>/<int:record_id>', views.EditLabourDetails, name='EditLabourDetails'),
+
    
 ]
 
