@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Site, Manpower, Attendance, Expense, Tool, total_amount_per_laborer
+from .models import *
 
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
@@ -26,6 +26,14 @@ class ToolAdmin(admin.ModelAdmin):
 
 @admin.register(total_amount_per_laborer)
 class total_amount_per_laborerAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(TotalSitesExpenseAmount)
+class TotalSitesExpenseAmountAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(TotalSitesToolAmount)
+class TotalSitesToolAmountAdmin(admin.ModelAdmin):
     pass
 
 

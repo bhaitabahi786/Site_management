@@ -33,6 +33,9 @@ def ManageSites(request,site_id):
  
     total_wages_per_worker = total_amount_per_laborer.objects.all()
 
+    TotalExpAmount = TotalSitesExpenseAmount.objects.filter(site=site_id)
+    TotalToolAmount = TotalSitesToolAmount.objects.filter(site=site_id)
+
     context = {
         'siteInfo': siteInfo,
         'manpowers': manpowers,
@@ -40,6 +43,8 @@ def ManageSites(request,site_id):
         'Tools': Tools,
         'records': records,
         'total_wages_per_worker': total_wages_per_worker,
+        'TotalExpAmount': TotalExpAmount,
+        'TotalToolAmount': TotalToolAmount,
     }
 
     return render(request,'sites/ManageSitePage.html',context)
@@ -76,9 +81,29 @@ def AddExpenses(request,site_id):
         
         ExpenseAdd = Expense(site=site_name2, date=date, description=expense_type, amount=amount)
         ExpenseAdd.save()
+
+        # Upadting the total expense amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteExpenses = Expense.objects.filter(site=site_id)
+        totalExpenseAmount = siteExpenses.aggregate(total_Exp=Sum('amount'))['total_Exp'] or 0
+        ExpTotalAmount = TotalSitesExpenseAmount.objects.filter(site=site_id)
+
+        if ExpTotalAmount.exists():
+            ExpTotalAmount.update(total_expense_amount=totalExpenseAmount)
+        else:
+            # Create a new TotalSitesExpenseAmount object with the calculated total
+            TotalSitesExpAmount = TotalSitesExpenseAmount(
+                site=siteID,
+                total_expense_amount=totalExpenseAmount,
+                
+            )
+            TotalSitesExpAmount.save()
+
         return redirect('ManageSites',site_id=site_id)
 
-    return render(request,'sites/AddExpensesPage.html',{'siteInfo':siteInfo})
+    ExpTotalAmountForSite = TotalSitesExpenseAmount.objects.filter(site=site_id)
+
+    return render(request,'sites/AddExpensesPage.html',{'siteInfo':siteInfo,'ExpTotalAmountForSite':ExpTotalAmountForSite})
 
 def AddTools(request,site_id):
 
@@ -93,9 +118,29 @@ def AddTools(request,site_id):
         
         ToolAdd = Tool(site=site_name2, name=tool_name, quantity=quantity, amount=amount)
         ToolAdd.save()
+
+        # Upadting the total tool amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteTools = Tool.objects.filter(site=site_id)
+        totalToolAmount = siteTools.aggregate(total_tool=Sum('amount'))['total_tool'] or 0
+        ToolTotalAmount = TotalSitesToolAmount.objects.filter(site=site_id)
+
+        if ToolTotalAmount.exists():
+            ToolTotalAmount.update(total_tool_amount=totalToolAmount)
+        else:
+            # Create a new TotalSitesToolAmount object with the calculated total
+            SitesToolAmount = TotalSitesToolAmount(
+                site=siteID,
+                total_tool_amount=totalToolAmount,
+                
+            )
+            SitesToolAmount.save()
+            
         return redirect('ManageSites',site_id=site_id)
 
-    return render(request,'sites/AddToolsPage.html',{'siteInfo':siteInfo})
+    ToolTotalAmountForSite = TotalSitesToolAmount.objects.filter(site=site_id)
+
+    return render(request,'sites/AddToolsPage.html',{'siteInfo':siteInfo,'ToolTotalAmountForSite':ToolTotalAmountForSite})
 
 def LabourDetails(request,site_id,labour_id):
     
@@ -144,6 +189,7 @@ def LabourDetails(request,site_id,labour_id):
         else:
             # Create a new TotalAmountPerLaborer object with the calculated total
             TotalAmountPerLaborer = total_amount_per_laborer(
+                site=siteID,
                 Manpower=manpower, 
                 total_amount=total_wages,
             )
@@ -221,6 +267,23 @@ def EditExpenses(request, site_id, expense_id):
         expense.amount = amount
         expense.save()
 
+        # Upadting the total expense amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteExpenses = Expense.objects.filter(site=site_id)
+        totalExpenseAmount = siteExpenses.aggregate(total_Exp=Sum('amount'))['total_Exp'] or 0
+        ExpTotalAmount = TotalSitesExpenseAmount.objects.filter(site=site_id)
+
+        if ExpTotalAmount.exists():
+            ExpTotalAmount.update(total_expense_amount=totalExpenseAmount)
+        else:
+            # Create a new TotalSitesExpenseAmount object with the calculated total
+            TotalSitesExpAmount = TotalSitesExpenseAmount(
+                site=siteID,
+                total_expense_amount=totalExpenseAmount,
+                
+            )
+            TotalSitesExpAmount.save()
+
         return redirect('ManageSites', site_id=site_id)
 
     return render(request, 'sites/EditPages/EditExpensePage.html', {'siteInfo': siteInfo, 'expense': expense})
@@ -243,6 +306,23 @@ def EditTools(request, site_id, tool_id):
         tool.amount = amount
         tool.save()
 
+        # Upadting the total tool amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteTools = Tool.objects.filter(site=site_id)
+        totalToolAmount = siteTools.aggregate(total_tool=Sum('amount'))['total_tool'] or 0
+        ToolTotalAmount = TotalSitesToolAmount.objects.filter(site=site_id)
+
+        if ToolTotalAmount.exists():
+            ToolTotalAmount.update(total_tool_amount=totalToolAmount)
+        else:
+            # Create a new TotalSitesToolAmount object with the calculated total
+            SitesToolAmount = TotalSitesToolAmount(
+                site=siteID,
+                total_tool_amount=totalToolAmount,
+                
+            )
+            SitesToolAmount.save()
+            
         return redirect('ManageSites', site_id=site_id)
 
     return render(request, 'sites/EditPages/EditToolsPage.html', {'siteInfo': siteInfo, 'tool': tool})
@@ -281,6 +361,7 @@ def EditLabourDetails(request,site_id,labour_id,record_id):
 
         # Calculate the total wages for the worker
         manAttendances = Attendance.objects.filter(manpower=manPK)
+        siteID = Site.objects.get(pk=site_id)
         total_wages = manAttendances.aggregate(total_amount=Sum('total_wages'))['total_amount'] or 0
 
         # Update the total_amount_per_laborer model
@@ -291,6 +372,7 @@ def EditLabourDetails(request,site_id,labour_id,record_id):
         else:
             # Create a new TotalAmountPerLaborer object with the calculated total
             TotalAmountPerLaborer = total_amount_per_laborer(
+                site=siteID,
                 Manpower=manpower, 
                 total_amount=total_wages,
             )
@@ -319,8 +401,44 @@ def delete_dataManage(request,delete_type, man_id, site_id):
         data = get_object_or_404(Manpower, pk=man_id)
     elif delete_type == 'expense':
         data = get_object_or_404(Expense, pk=man_id)
+
+        # Upadting the total expense amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteExpenses = Expense.objects.filter(site=site_id)
+        totalExpenseAmount = siteExpenses.aggregate(total_Exp=Sum('amount'))['total_Exp'] or 0
+        ExpTotalAmount = TotalSitesExpenseAmount.objects.filter(site=site_id)
+
+        if ExpTotalAmount.exists():
+            ExpTotalAmount.update(total_expense_amount=totalExpenseAmount)
+        else:
+            # Create a new TotalSitesExpenseAmount object with the calculated total
+            TotalSitesExpAmount = TotalSitesExpenseAmount(
+                site=siteID,
+                total_expense_amount=totalExpenseAmount,
+                
+            )
+            TotalSitesExpAmount.save()
+
     elif delete_type == 'tool':
-         data = get_object_or_404(Tool, pk=man_id)
+        data = get_object_or_404(Tool, pk=man_id)
+
+        # Upadting the total tool amount for the site
+        siteID = Site.objects.get(pk=site_id)
+        siteTools = Tool.objects.filter(site=site_id)
+        totalToolAmount = siteTools.aggregate(total_tool=Sum('amount'))['total_tool'] or 0
+        ToolTotalAmount = TotalSitesToolAmount.objects.filter(site=site_id)
+
+        if ToolTotalAmount.exists():
+            ToolTotalAmount.update(total_tool_amount=totalToolAmount)
+        else:
+            # Create a new TotalSitesToolAmount object with the calculated total
+            SitesToolAmount = TotalSitesToolAmount(
+                site=siteID,
+                total_tool_amount=totalToolAmount,
+
+            )
+            SitesToolAmount.save()
+
 
     data.delete()
     return redirect('ManageSites',site_id=site_id)
@@ -332,6 +450,7 @@ def delete_ManData(request,labour_id,record_id,site_id):
 
     # Calculate the total wages for the worker
     manAttendances = Attendance.objects.filter(manpower=labour_id)
+    siteID = Site.objects.get(pk=site_id)
     total_wages = manAttendances.aggregate(total_amount=Sum('total_wages'))['total_amount'] or 0
     # Update the total_amount_per_laborer model
     totalAmountLabour = total_amount_per_laborer.objects.filter(Manpower=labour_id)
@@ -340,6 +459,7 @@ def delete_ManData(request,labour_id,record_id,site_id):
     else:
         # Create a new TotalAmountPerLaborer object with the calculated total
         TotalAmountPerLaborer = total_amount_per_laborer(
+            site=siteID,
             Manpower=manpower, 
             total_amount=total_wages,
         )

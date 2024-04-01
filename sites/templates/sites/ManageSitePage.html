@@ -82,6 +82,13 @@
                 {% endif %}
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><strong>Total Amount:</strong></td>
+                    <td id="totalExpenseAmount"> {{ TotalExpAmount.0.total_expense_amount }} </td> 
+                </tr>
+            </tfoot>
         </table>
         <!-- Table to display details for tools -->
         <h4>Tools</h4>
@@ -107,10 +114,17 @@
                         <a href="{% url 'EditTools' tool.id siteInfo.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_dataManage' 'tool' tool.id siteInfo.id %}" class="btn-small waves-effect waves-light">Delete</a>
                     </td>
-                </tr>
+                </tr> 
                 {% endif %}
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><strong>Total Amount:</strong></td>
+                    <td id="totalToolAmount"> {{ TotalToolAmount.0.total_tool_amount }} </td> 
+                </tr>
+            </tfoot>
         </table>
     </div>
     <!-- Materialize JS -->

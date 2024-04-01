@@ -42,11 +42,6 @@ class Attendance(models.Model):
         super().save(*args, **kwargs)
 
 
-class total_amount_per_laborer(models.Model):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    Manpower = models.ForeignKey(Manpower, on_delete=models.CASCADE)
-    total_amount = models.DecimalField(max_digits=100, decimal_places=2)
-
 
 class Expense(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -60,10 +55,20 @@ class Tool(models.Model):
     quantity = models.IntegerField()
     amount = models.DecimalField(max_digits=100, decimal_places=2)
 
+class total_amount_per_laborer(models.Model):
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    Manpower = models.ForeignKey(Manpower, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=100, decimal_places=2)
+
+
 class TotalSitesExpenseAmount(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    expenseTotal = models.ForeignKey(Expense, on_delete=models.CASCADE)
-    toolTotal = models.ForeignKey(Tool, on_delete=models.CASCADE)
-    LabourTotal = models.ForeignKey(total_amount_per_laborer, on_delete=models.CASCADE)
     total_expense_amount = models.DecimalField(max_digits=100, decimal_places=2)
+
+class TotalSitesToolAmount(models.Model):
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    total_tool_amount = models.DecimalField(max_digits=100, decimal_places=2)
+
+
+
 
