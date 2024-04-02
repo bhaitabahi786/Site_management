@@ -6,9 +6,57 @@ from django.db.models import F, Sum
 
 from django.http import HttpResponse
 
+# creating a functions try
+
+def SitesPageTotalDisplay():
+    total_wages_per_worker = total_amount_per_laborer.objects.all()
+    TotalExpAmount = TotalSitesExpenseAmount.objects.all()
+    TotalToolAmount = TotalSitesToolAmount.objects.all()
+
+    print(total_wages_per_worker.count())
+    totalAmount = {}
+    cc = total_wages_per_worker.count()
+    for cc in range(0,cc):
+        
+        tot = 0
+        for i in total_wages_per_worker:
+            
+            if i.site.id == cc:
+                print(i.site.id)
+                print(i.total_amount)
+                tot = tot + i.total_amount
+                print("inside if"+ str(tot))
+
+                totalAmount[i.site.id] = tot  
+        
+    print(totalAmount)
+    print(TotalExpAmount)
+    print(TotalToolAmount)
+
+    return totalAmount
+
 def sites(request):
     sites = Site.objects.all()
-    return render(request, 'sites/sitepage.html', {'sites': sites})
+
+    total_wages_per_worker = total_amount_per_laborer.objects.all()
+    TotalExpAmount = TotalSitesExpenseAmount.objects.all()
+    TotalToolAmount = TotalSitesToolAmount.objects.all()
+
+    # function call for total amount display
+    totalAmount = SitesPageTotalDisplay()  
+
+    print(totalAmount)
+    # print(TotalExpAmount)
+    # print(TotalToolAmount)
+
+    content = {
+        'sites': sites,
+        'total_wages_per_worker': total_wages_per_worker,
+        'TotalExpAmount': TotalExpAmount,
+        'TotalToolAmount': TotalToolAmount,
+        'totalAmount': totalAmount,
+    }
+    return render(request, 'sites/sitepage.html', content)
 
 def addSites(request):
 

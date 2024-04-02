@@ -3,29 +3,50 @@
 {% block content %}
 
 <body>
+    {% load custom_filters %}
     <div class="container">
         <h3>Site Manager</h3>
         <!-- Add Site Button -->
         <a href="addSites/" class="btn waves-effect waves-light">Add Site</a>
 
         <!-- Table to display all added sites -->
+
         <table class="highlight">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
                     <th>Quotation Amount</th>
+                    <th>Labour total</th>
+                    <th>Expenses Total</th>
+                    <th>Tool Total</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-             
+                
                 <!-- Add more rows for additional sites -->
                 {% for site in sites %}
                 <tr>
                     <td><a href="{% url 'ManageSites' site.id %}"> {{ site.name }} </a></td>
                     <td> {{ site.address }} </td>
                     <td> {{ site.quotation_amount }} </td>
+                    <td> {{ totalAmount|get_item:site.id|default:'N/A' }} </td>
+
+                    {% for expense in TotalExpAmount %}
+
+                    {% if expense.site.id == site.id %}
+                    <td> {{ expense.total_expense_amount|default_if_none:0|yesno:'N/A' }} </td>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for ToolAmount in TotalToolAmount %}
+                    
+                    {% if ToolAmount.site.id == site.id %}
+                    <td> {{ ToolAmount.total_tool_amount|default_if_none:0|yesno:'N/A' }} </td>
+                    {% endif %}
+                    {% endfor %}
+                    
                     <td>
                         <a href="{% url 'editSites' site.id %}" class="btn-small waves-effect waves-light">Edit</a>
                         <a href="{% url 'delete_site' site.id %}" class="btn-small waves-effect waves-light">Delete</a>
@@ -35,6 +56,7 @@
             </tbody>
         </table>
     </div>
+    <div></div>
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
